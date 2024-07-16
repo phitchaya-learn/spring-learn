@@ -30,9 +30,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and push Docker image
-        run: mvn compile com.google.cloud.tools:jib-maven-plugin:3.1.1:build \
-          -Djib.from.image=eclipse-temurin:17-jre \
-          -Djib.to.image=${{ env.image }}
+        run: |
+          mvn compile com.google.cloud.tools:jib-maven-plugin:3.1.1:build \
+            -Djib.from.image=eclipse-temurin \
+            -Djib.to.image=${{ env.image }}
   azure-aci-deploy:
     needs: docker-build-push
     runs-on: ubuntu-latest
