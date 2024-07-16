@@ -28,7 +28,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          architecture: armv7
 
       - name: Build and push Docker image
         run: mvn compile jib:build
