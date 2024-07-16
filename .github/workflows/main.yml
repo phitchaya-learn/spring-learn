@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  image: ${{ secrets.DOCKER_HUB_USERNAME }}/simplespring:${{ github.sha }}
+  image: ${{ secrets.DOCKERHUB_USERNAME }}/simplespring:${{ github.sha }}
 
 jobs:
   docker-build-push:
