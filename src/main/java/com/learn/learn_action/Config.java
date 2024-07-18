@@ -9,24 +9,24 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties
 public class Config {
 
-    private String name;
     private String environment;
-    private int age;
+    private String greeting;
+    private String foo;
 
-    public int getAge() {
-        return age;
+    public String getGreeting() {
+        return greeting;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setGreeting(String greeting) {
+        this.greeting = greeting;
     }
 
-    public String getName() {
-        return name;
+    public String getFoo() {
+        return foo;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFoo(String foo) {
+        this.foo = foo;
     }
 
     public String getEnvironment() {

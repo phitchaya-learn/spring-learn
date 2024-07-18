@@ -18,7 +18,7 @@ public class HelloWorldController {
 
     @GetMapping("/env-check")
     public String getMethodName() {
-        return "This is " + config.getEnvironment() + " environment.";
+        return "This is " + config.getEnvironment() + " environment.\n" + config.getGreeting();
     }
 
 }

@@ -1,0 +1,15 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: simplespring
+  labels:
+    app: simplespring
+data:
+  application-dev.yaml: |-
+    environment: development
+    greeting: hello from ConfigMap dev
+    foo: bar
+  application-prod.yaml: |-
+    environment: production
+    greeting: hello from ConfigMap prod
+    foo: bazz

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: simplespring
+  cloud:
+    kubernetes:
+      config:
+        namespace: default
+        sources:
+          - labels:
+              app: simplespring

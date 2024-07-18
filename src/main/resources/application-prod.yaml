@@ -1,7 +1,0 @@
-spring:
-    config:
-        activate:
-            on-profile: prod
-name: prod-YAML
-environment: production
-foo: bazz
