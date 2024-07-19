@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simplespring
+  labels:
+    app: simplespring
+    service: simplespring
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: simplespring
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplespring
+  labels:
+    app: simplespring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplespring
+  template:
+    metadata:
+      labels:
+        app: simplespring
+    spec:
+      containers:
+      - name: simplespring
+        image: docker.io/gustphitchaya/simplespring:077d6b109e35adbb95f5c4f626a712ef842f8de9
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: simplespring-config
