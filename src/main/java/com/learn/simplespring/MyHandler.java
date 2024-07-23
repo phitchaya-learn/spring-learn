@@ -18,7 +18,7 @@ class MyHandler implements ObservationHandler<Observation.Context> {
 
     @Override
     public void onStart(Observation.Context context) {
-        log.info("Before running the observation for context [{}], userType [{}]", "HELLO", context.getName(),
+        log.info("Before running the observation for context [{}], userType [{}]", context.getName(),
                 getUserTypeFromContext(context));
     }
 

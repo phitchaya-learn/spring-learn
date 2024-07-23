@@ -15,7 +15,7 @@ class HelloWorldService {
     @Autowired
     private Config config;
 
-    @Observed(name = "foo", contextualName = "getting-user-name", lowCardinalityKeyValues = { "userType",
+    @Observed(name = "hello", contextualName = "getting-user-name", lowCardinalityKeyValues = { "userType",
             "userType2" })
     String hello(String name) {
         log.info("Getting hello for {}", name);
@@ -26,7 +26,7 @@ class HelloWorldService {
     // <user.name> will be used as a metric name
     // <getting-user-name> will be used as a span name
     // <userType=userType2> will be set as a tag for both metric & span
-    @Observed(name = "bar", contextualName = "getting-user-name", lowCardinalityKeyValues = { "userType",
+    @Observed(name = "env-check", contextualName = "getting-user-name", lowCardinalityKeyValues = { "userType",
             "userType2" })
     String checkEnvironment() {
         log.info("Checking environment");
