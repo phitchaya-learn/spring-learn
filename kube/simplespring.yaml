@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: simplespring
-        image: docker.io/gustphitchaya/simplespring:d724832bcb2ef9e2e8bf10a26f02ab0ff89da562
+        image: docker.io/gustphitchaya/simplespring6
         ports:
         - containerPort: 8080
         env:
@@ -38,7 +38,7 @@ spec:
           value: dev
         volumeMounts:
         - name: config-volume
-          mountPath: /config
+          mountPath: /config # will be configurable API path 
       volumes:
       - name: config-volume
         configMap:
