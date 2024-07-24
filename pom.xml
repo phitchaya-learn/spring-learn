@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
-		</dependency>
+		</dependency>	
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -75,6 +75,35 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>2.8.0</version>
+				<configuration>
+					<from>
+						<image>eclipse-temurin</image>
+						<platforms>
+							<platform>
+								<architecture>amd64</architecture>
+								<os>linux</os>
+							</platform>
+							<platform>
+								<architecture>arm64</architecture>
+								<os>linux</os>
+							</platform>
+						</platforms>
+					</from>
+				</configuration>
+			</plugin>
+			<!-- <plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-image-maven-plugin</artifactId>
+				<version>0.6.0</version>
+				<configuration>
+					<image>graalvm/graalvm-ce:22.0.0.2</image>
+					<buildArgs>-Dgraalvm.nativeImage</buildArgs>
+				</configuration>
+			</plugin> -->
 		</plugins>
 	</build>
 
