@@ -51,9 +51,20 @@ jobs:
           # insecure_skip_tls_verify: true
           namespace: ${{ secrets.OPENSHIFT_DEDICATED_DEFAULT_NAMESPACE }}
       
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+        id: install
+      
+      - name: Create simplespring.yaml with the newly created image
+        run: |
+          helm template ./simplespringchart \
+            --set image=${{ env.IMAGE }} \
+            --output-dir ./tmp \
+          mv ./tmp/simplespringchart/templates/simplespring.yaml ./kube/simplespring.yaml \
+          rm -r ./tmp
+
       - name: Deploy the application
         run: oc apply -f kube
-        # TODO: use newly created image, maybe use Helm Template
 
   # azure-aci-deploy:
   #   needs: docker-build-push
