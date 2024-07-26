@@ -60,8 +60,7 @@ jobs:
           helm template ./simplespringchart \
             --set image=${{ env.IMAGE }} \
             --output-dir ./tmp \
-          mv ./tmp/simplespringchart/templates/simplespring.yaml ./kube/simplespring.yaml \
-          rm -r ./tmp
+          mv ./tmp/simplespringchart/templates/simplespring.yaml ./kube/simplespring.yaml
 
       - name: Deploy the application
         run: oc apply -f kube
