@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/simplespring:${{ github.sha }}
+  IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/simplespring:${{ github.sha }}
 
 jobs:
   docker-build-push:
@@ -32,7 +32,27 @@ jobs:
       - name: Build and push Docker image
         run: |
           mvn compile jib:build \
-            -Djib.to.image=${{ env.image }}
+            -Djib.to.image=${{ env.IMAGE }}
+    
+  openshift-deploy:
+    needs: docker-build-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_DEDICATED_SERVER }}
+          openshift_username: ${{ secrets.OPENSHIFT_DEDICATED_USERNAME }}
+          openshift_password: ${{ secrets.OPENSHIFT_DEDICATED_PASSWORD }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.OPENSHIFT_DEDICATED_DEFAULT_NAMESPACE }}
+      
+      - name: Deploy the application
+        run: oc apply -f kube
+        # TODO: use newly created image, maybe use Helm Template
 
   # azure-aci-deploy:
   #   needs: docker-build-push
