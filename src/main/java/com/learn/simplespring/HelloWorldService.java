@@ -30,6 +30,6 @@ class HelloWorldService {
             "userType2" })
     String checkEnvironment() {
         log.info("Checking environment");
-        return "This is " + config.getEnvironment() + " environment. " + config.getGreeting();
+        return "This is " + config.getEnvironment() + " environment. " + config.getGreeting() + " 2";
     }
 }
