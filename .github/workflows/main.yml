@@ -45,8 +45,9 @@ jobs:
         uses: redhat-actions/oc-login@v1
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_DEDICATED_SERVER }}
-          openshift_username: ${{ secrets.OPENSHIFT_DEDICATED_USERNAME }}
-          openshift_password: ${{ secrets.OPENSHIFT_DEDICATED_PASSWORD }}
+          openshift_token: ${{ secrets.OPENSHIFT_DEDICATED_TOKEN }}
+          # openshift_username: ${{ secrets.OPENSHIFT_DEDICATED_USERNAME }}
+          # openshift_password: ${{ secrets.OPENSHIFT_DEDICATED_PASSWORD }}
           # insecure_skip_tls_verify: true
           namespace: ${{ secrets.OPENSHIFT_DEDICATED_DEFAULT_NAMESPACE }}
       
