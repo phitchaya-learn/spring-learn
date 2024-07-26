@@ -1,0 +1,7 @@
+spring:
+      config:
+        activate:
+          on-profile: dev
+environment: resource-development
+greeting: hello from resource dev
+foo: bar
