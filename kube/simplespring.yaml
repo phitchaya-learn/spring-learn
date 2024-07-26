@@ -30,8 +30,8 @@ spec:
     spec:
       containers:
       - name: simplespring
-        image: "docker.io/gustphitchaya/simplespring7"
-        # "docker.io/gustphitchaya/simplespring7"
+        image: "docker.io/gustphitchaya/simplespring:064bb87b155d0ffcddb99ae428c50523c4bf2c16"
+        # "docker.io/gustphitchaya/simplespring:064bb87b155d0ffcddb99ae428c50523c4bf2c16"
         # "docker.io/gustphitchaya/simplespring-native:tag"
         ports:
         - containerPort: 8080
