@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simplespring
+  labels:
+    app: simplespring
+    service: simplespring
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: simplespring
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplespring
+  labels:
+    app: simplespring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplespring
+  template:
+    metadata:
+      labels:
+        app: simplespring
+    spec:
+      containers:
+      - name: simplespring
+        image: docker.io/gustphitchaya/simplespring-native:1fc73421bf1ada7ce77963ed7713736feb527b15
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config # will be configurable API path 
+      # - name: tempo
+      #   image: grafana/tempo
+      #   command: ["-config.file=/etc/tempo.yaml"]
+      #   env:
+      #   - name: JAEGER_AGENT_HOST
+      #     value: tempo
+      #   - name: JAEGER_ENDPOINT
+      #     value: http://tempo:14268/api/traces
+      #   volumeMounts:
+      #   - name: tempo-config
+      #     mountPath: /etc/tempo.yaml
+      #   - name: tempo-data
+      #     mountPath: /tmp/tempo
+      #   ports:
+      #   - containerPort: 14268
+      # - name: loki
+      #   image: grafana/loki
+      #   command: ["-config.file=/etc/loki/local-config.yaml"]
+      #   env:
+      #   - name: JAEGER_AGENT_HOST
+      #     value: tempo
+      #   - name: JAEGER_ENDPOINT
+      #     value: http://tempo:14268/api/traces
+      #   ports:
+      #   - containerPort: 3100
+      # - name: prometheus
+      #   image: prom/prometheus
+      #   command: ["--enable-feature=exemplar-storage", "--config.file=/etc/prometheus/prometheus.yml"]
+      #   volumeMounts:
+      #   - name: prometheus-config
+      #     mountPath: /etc/prometheus/prometheus.yml
+      #   ports:
+      #   - containerPort: 9090
+      volumes:
+      - name: config-volume
+        configMap:
+          name: simplespring-config
+      # - name: tempo-config
+      #   configMap:
+      #     name: tempo-config
+      # - name: tempo-data
+      #   persistentVolumeClaim:
+      #     claimName: tempo-data-pvc
+      # - name: prometheus-config
+      #   configMap:
+      #     name: prometheus-config

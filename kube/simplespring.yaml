@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
   - port: 8080
-    name: http
+    name: app
   selector:
     app: simplespring
 ---
@@ -30,7 +30,9 @@ spec:
     spec:
       containers:
       - name: simplespring
-        image: docker.io/gustphitchaya/simplespring-native:1fc73421bf1ada7ce77963ed7713736feb527b15
+        image: "docker.io/gustphitchaya/simplespring7"
+        # "docker.io/gustphitchaya/simplespring7"
+        # "docker.io/gustphitchaya/simplespring-native:tag"
         ports:
         - containerPort: 8080
         env:
@@ -39,49 +41,51 @@ spec:
         volumeMounts:
         - name: config-volume
           mountPath: /config # will be configurable API path 
-      # - name: tempo
-      #   image: grafana/tempo
-      #   command: ["-config.file=/etc/tempo.yaml"]
-      #   env:
-      #   - name: JAEGER_AGENT_HOST
-      #     value: tempo
-      #   - name: JAEGER_ENDPOINT
-      #     value: http://tempo:14268/api/traces
-      #   volumeMounts:
-      #   - name: tempo-config
-      #     mountPath: /etc/tempo.yaml
-      #   - name: tempo-data
-      #     mountPath: /tmp/tempo
-      #   ports:
-      #   - containerPort: 14268
-      # - name: loki
-      #   image: grafana/loki
-      #   command: ["-config.file=/etc/loki/local-config.yaml"]
-      #   env:
-      #   - name: JAEGER_AGENT_HOST
-      #     value: tempo
-      #   - name: JAEGER_ENDPOINT
-      #     value: http://tempo:14268/api/traces
-      #   ports:
-      #   - containerPort: 3100
-      # - name: prometheus
-      #   image: prom/prometheus
-      #   command: ["--enable-feature=exemplar-storage", "--config.file=/etc/prometheus/prometheus.yml"]
-      #   volumeMounts:
-      #   - name: prometheus-config
-      #     mountPath: /etc/prometheus/prometheus.yml
-      #   ports:
-      #   - containerPort: 9090
       volumes:
       - name: config-volume
         configMap:
-          name: simplespring-config
-      # - name: tempo-config
-      #   configMap:
-      #     name: tempo-config
-      # - name: tempo-data
-      #   persistentVolumeClaim:
-      #     claimName: tempo-data-pvc
-      # - name: prometheus-config
-      #   configMap:
-      #     name: prometheus-config
+          name: simplespring
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: simplespring
+data:
+  application-dev.yaml: |-
+    spring:
+      config:
+        activate:
+          on-profile: dev
+        import: "configserver:http://config-server:8888" # if optional, it gets replaced by the config that is built with the image
+    greeting: hello from ConfigMap dev
+    foo: bar
+  application-prod.yaml: |-
+    spring:
+      config:
+        activate:
+          on-profile: prod
+        import: "optional:configserver:http://config-server:8888"
+    environment: ConfigMap production
+    greeting: hello from ConfigMap prod
+    foo: bazz
+  application.properties: |-
+    spring.application.name=simplespring
+    spring.profiles.active=dev
+
+    server.port=8080
+
+    # All traces should be sent to latency analysis tool
+    management.tracing.sampling.probability=1.0
+    management.endpoints.web.exposure.include=prometheus
+
+    # Zipkin URL
+    management.zipkin.tracing.endpoint=http://zipkin:9411/api/v2/spans
+
+    # For Exemplars to work we need histogram buckets
+    management.metrics.distribution.percentiles-histogram.http.server.requests=true
+
+    # traceID and spanId are predefined MDC keys - we want the logs to include them
+    logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]
+
+    # Use Spring Cloud Config Server if available
+    spring.config.import=optional:configserver:http://config-server:8888
