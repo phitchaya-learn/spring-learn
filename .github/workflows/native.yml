@@ -17,24 +17,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
     
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up GraalVM
-        uses: graalvm/setup-graalvm@v1
-        with:
-          java-version: '17'
-          distribution: 'graalvm'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Set up GraalVM
+      #   uses: graalvm/setup-graalvm@v1
+      #   with:
+      #     java-version: '17'
+      #     distribution: 'graalvm'
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
-        run: |
-            mvn compile -Pnative native:compile jib:build -DskipTests \
-                -Djib.from.image=ghcr.io/graalvm/graalvm-community:17 \
-                -Djib.to.image=${{ env.image }}
+      # - name: Build and push Docker image
+      #   run: |
+      #       mvn compile -Pnative native:compile jib:build -DskipTests \
+      #           -Djib.from.image=ghcr.io/graalvm/graalvm-community:17 \
+      #           -Djib.to.image=${{ env.image }}
   # azure-aci-deploy:
   #   needs: docker-build-push
   #   runs-on: ubuntu-latest

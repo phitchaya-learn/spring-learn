@@ -59,7 +59,7 @@ jobs:
         run: |
           helm template ./simplespringchart \
             --set image=${{ env.IMAGE }} \
-            --output-dir ./tmp \
+            --output-dir ./tmp && \
           mv ./tmp/simplespringchart/templates/simplespring.yaml ./kube/simplespring.yaml
 
       - name: Deploy the application
