@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplespring-client
+  labels:
+    app: simplespring-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplespring-client
+  template:
+    metadata:
+      labels:
+        app: simplespring-client
+    spec:
+      containers:
+      - name: simplespring-client
+        image: "docker.io/gustphitchaya/simplespring-client:1"
+        volumeMounts:
+        - name: client-config-volume
+          mountPath: /config
+      volumes:
+      - name: client-config-volume
+        configMap:
+          name: simplespring-client
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simplespring-client
+data:
+  application.properties: |
+    server.port=6543
+    spring.application.name=client
+
+    # All traces should be sent to latency analysis tool
+    management.tracing.sampling.probability=1.0
+    management.endpoints.web.exposure.include=prometheus
+
+    # traceID and spanId are predefined MDC keys - we want the logs to include them
+    logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]
+
+    # Zipkin url
+    management.zipkin.tracing.endpoint=http://zipkin:9411/api/v2/spans

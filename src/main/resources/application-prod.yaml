@@ -1,7 +1,0 @@
-spring:
-      config:
-        activate:
-          on-profile: prod
-environment: resource-production
-greeting: hello from resource prod
-foo: bazz

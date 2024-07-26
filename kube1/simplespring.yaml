@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simplespring
+  labels:
+    app: simplespring
+    service: simplespring
+spec:
+  ports:
+  - port: 8080
+    name: app
+  selector:
+    app: simplespring
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplespring
+  labels:
+    app: simplespring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplespring
+  template:
+    metadata:
+      labels:
+        app: simplespring
+    spec:
+      containers:
+      - name: simplespring
+        image: "docker.io/gustphitchaya/simplespring7"
+        # "docker.io/gustphitchaya/simplespring7"
+        # "docker.io/gustphitchaya/simplespring-native:tag"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config # will be configurable API path 
+      volumes:
+      - name: config-volume
+        configMap:
+          name: simplespring
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: simplespring
+data:
+  application-dev.yaml: |-
+    spring:
+      config:
+        activate:
+          on-profile: dev
+        import: "configserver:http://config-server:8888" # if optional, it gets replaced by the config that is built with the image
+    greeting: hello from ConfigMap dev
+    foo: bar
+  application-prod.yaml: |-
+    spring:
+      config:
+        activate:
+          on-profile: prod
+        import: "optional:configserver:http://config-server:8888"
+    environment: ConfigMap production
+    greeting: hello from ConfigMap prod
+    foo: bazz
+  application.properties: |-
+    spring.application.name=simplespring
+    spring.profiles.active=dev
+
+    server.port=8080
+
+    # All traces should be sent to latency analysis tool
+    management.tracing.sampling.probability=1.0
+    management.endpoints.web.exposure.include=prometheus
+
+    # Zipkin URL
+    management.zipkin.tracing.endpoint=http://zipkin:9411/api/v2/spans
+
+    # For Exemplars to work we need histogram buckets
+    management.metrics.distribution.percentiles-histogram.http.server.requests=true
+
+    # traceID and spanId are predefined MDC keys - we want the logs to include them
+    logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]
+
+    # Use Spring Cloud Config Server if available
+    spring.config.import=optional:configserver:http://config-server:8888
