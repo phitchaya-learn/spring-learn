@@ -35,7 +35,7 @@ jobs:
             -Djib.to.image=${{ env.IMAGE }}
     
   openshift-deploy:
-    needs: docker-build-push
+    # needs: docker-build-push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
